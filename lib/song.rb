@@ -1,19 +1,21 @@
-class Song
-  attr_accessor :artist, :name
+class MP3Importer
+  attr_accessor :path
 
-  def initialize(name)
-    @name = name
+  def initialize(path)
+    @path = path
   end
 
-  def artist_name=(name)
-    self.artist = Artist.find_or_create_by_name(name)
-    artist.add_song(self)
+  def files
+    files = Dir["#{path}/*.mp3"]
+    files.each do |path|
+      path.slice!("./spec/fixtures/mp3s/")
+    end
+    @@files = files
   end
 
-  def self.new_by_filename(file)
-    song_info = file.chomp(".mp3").split(" - ")
-    song = Song.new(song_info[1])
-    song.artist_name = song_info[0]
-    song
+  def import
+    @@files.each do |file|
+      Song.new_by_filename(file)
+    end
   end
 end
