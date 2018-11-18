@@ -6,16 +6,16 @@ class MP3Importer
   end
 
   def files
-    files = Dir["#{path}/*.mp3"]
-    files.each do |path|
-      path.slice!("./spec/fixtures/mp3s/")
+    files = []
+    Dir.new(self.path).each do |file|
+      files << file if file.length > 4
     end
-    @@files = files
+    files
   end
 
   def import
-    @@files.each do |file|
-      Song.new_by_filename(file)
+    self.files.each do |filename|
+      Song.new_by_filename(filename)
     end
   end
 end
